@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +18,6 @@ import com.liga.entidades.Temporada;
 import com.liga.entidades.extras.TemporadaA;
 import com.liga.repositorios.ITemporada;
 
-@CrossOrigin(origins="http://192.168.43.17:8081", maxAge=3600)
 @RestController
 @RequestMapping(value="/temporada")
 public class TemporadaController {
@@ -46,7 +44,7 @@ public class TemporadaController {
 	@GetMapping(value="/showg")
   	public Boolean showg() {
   		Temporada tem=tempo.findAll().stream().max((x,y)->x.getNumero().compareTo(y.getNumero())).get();
-  		return "llenando".equals(tem.getEstado()) &  tem.getEquipoTemporadaList().size()>9;
+  		return "llenando".equals(tem.getEstado()) &  tem.getEquipoTemporadaList().size()>9 & tem.getJornadaList().isEmpty();
   	}
 	@GetMapping(value="/antiguo")
 	public List<TemporadaA> Antiguo() {

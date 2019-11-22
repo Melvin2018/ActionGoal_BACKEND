@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,8 +45,7 @@ public class Jornada implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "jornada", fetch = FetchType.LAZY)
     private List<Formacion> formacionList;
-    @JsonIgnore
-    @OneToMany(mappedBy = "jornada", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "jornada", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private List<Partido> partidoList;
 
     public Jornada() {

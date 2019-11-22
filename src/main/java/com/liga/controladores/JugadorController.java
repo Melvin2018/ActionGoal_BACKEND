@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,6 @@ import com.liga.repositorios.ITemporada;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@CrossOrigin(origins = "http://192.168.43.17:8081", maxAge = 3600)
 @RestController
 @RequestMapping(value = "/Jugador")
 public class JugadorController {
