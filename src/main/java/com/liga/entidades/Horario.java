@@ -43,6 +43,8 @@ public class Horario implements Serializable {
     @Basic(optional = false)
     @Column(name = "dia")
     private String dia;
+    @Column(name = "jerarquia")
+    private Integer jerarquia;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "horario", fetch = FetchType.LAZY)
     private List<Partido> partidoList;
@@ -82,6 +84,14 @@ public class Horario implements Serializable {
 
     public void setDia(String dia) {
         this.dia = dia;
+    }
+
+    public Integer getJerarquia() {
+        return jerarquia;
+    }
+
+    public void setJerarquia(Integer jerarquia) {
+        this.jerarquia = jerarquia;
     }
 
     @XmlTransient

@@ -16,7 +16,6 @@ import com.liga.entidades.Temporada;
 import com.liga.repositorios.IEquipoTemporada;
 import com.liga.repositorios.IHorario;
 import com.liga.repositorios.IJornada;
-import com.liga.repositorios.IPartido;
 import com.liga.repositorios.ITemporada;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,69 +31,117 @@ public class PartidosController {
     @Autowired
     private IJornada jor;
     @Autowired
-    private IPartido par;
-    @Autowired
     private IEquipoTemporada eq;
-    private List<EquipoTemporada> descanso = new ArrayList<>();
-    private List<Partido> partidos = new ArrayList<>();
-    private boolean repetir=false;
+    private final List<EquipoTemporada> descanso = new ArrayList<>();
+    private final List<Partido> partidos = new ArrayList<>();
+    private final List<Jornada> jornadas = new ArrayList<>();
+    private int contador = 0;
+    private boolean impar = true;
 
     @GetMapping(value = "/Generar")
-    public List<Partido> partidos() {
+    public List<Partido> generar() {
         Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-        List<Jornada> jornadas = new ArrayList<>();
+        if (!te.getJornadaList().isEmpty())
+        {
+            return null;
+        }
+        List<Jornada> jornadasr = new ArrayList<>();
+        int cant = te.getEquipoTemporadaList().size();
+        if (cant % 2 == 1)
+        {
+            cant++;
+            impar = true;
+        } else
+        {
+            impar = false;
+        }
 
         AtomicInteger numero = new AtomicInteger(0);
-        while (numero.incrementAndGet() < te.getEquipoTemporadaList().size())
+        while (numero.incrementAndGet() != cant)
         {
             Jornada j = new Jornada();
             j.setEstado(true);
             j.setNumero(numero.get());
             j.setTemporada(te);
-            jornadas.add(j);
+            jornadasr.add(j);
         }
-        jornadas.stream().forEach((x) ->
+        boolean repetir = false;
+        do
         {
-            JorAdd(x);
-        });
+            for (Jornada j : jornadasr)
+            {
+                repetir = JorAdd(j);
+                if (repetir)
+                {
+                    break;
+                }
+            }
+        } while (repetir);
+        jornadas.forEach(x->jor.save(x));
         return partidos;
     }
 
-    private void JorAdd(Jornada x) {
-        List<EquipoTemporada> equiposr = eq.findAll().stream().filter(y -> y.getTemporada().getId().equals(x.getTemporada().getId())).collect(Collectors.toList());
-        List<Horario> horariosr = hora.findAll();
-        if (equiposr.size() % 2 == 1)
+    private Boolean JorAdd(Jornada x) {
+        List<Partido> parp = new ArrayList<>();
+        int contador1 = 0;
+        while (parp.isEmpty())
         {
-            EquipoTemporada eqt = random(descanso, x.getTemporada());
-            descanso.add(eqt);
-            equiposr.remove(eqt);
+            contador1++;
+            parp = partidos(x, equipos(x));
+            if (contador1 == equipos(x).size())
+            {
+                partidos.removeAll(partidos);
+                descanso.removeAll(descanso);
+                return true;
+            }
         }
-        while (equiposr.size() >= 2)
+        partidos.addAll(parp);
+        x.setPartidoList(parp);
+        jornadas.add(x);
+        return false;
+    }
+
+    private List<Partido> partidos(Jornada x, List<EquipoTemporada> equiposr) {
+        List<Partido> pp = new ArrayList<>();
+        List<Horario> horarios = hora.findAll();
+        while (equiposr.size() > 1)
         {
             System.out.println("jornada " + x.getNumero() + " " + equiposr.size());
             EquipoTemporada equipor1 = random(equiposr);
             equiposr.remove(equipor1);
-            EquipoTemporada equipor2 = random(equiposr, partidos, equipor1);
-           
-            if(repetir){
-               descanso.remove(descanso.size()-1);
-               JorAdd(x);
-              break;
-            }if(equipor2!=null){
+            EquipoTemporada equipor2 = random(equiposr, equipor1);
+            if (equipor2 == null)
+            {
+                equiposr.removeAll(equiposr);
+                pp.removeAll(pp);
+                return pp;
+            }
             equiposr.remove(equipor2);
-            Horario horarior = random1(horariosr);
-            horariosr.remove(horarior);
+            Horario horarior = random1(horarios);
+            horarios.remove(horarior);
             Partido partido = new Partido();
             partido.setEquipo1(equipor1);
             partido.setEquipo2(equipor2);
             partido.setEstado(Boolean.TRUE);
             partido.setJornada(x);
             partido.setHorario(horarior);
-            partidos.add(partido);
-            x.setPartidoList(partidos);
-            jor.save(x);
+            pp.add(partido);
+        }
+        if (impar)
+        {
+            EquipoTemporada etr = equiposr.get(0);
+            if (!equipoDescanso(etr))
+            {
+                equiposr.removeAll(equiposr);
+                pp.removeAll(pp);
+                return pp;
+            } else
+            {
+                descanso.add(etr);
+                return pp;
             }
         }
+        return pp;
     }
 
     private EquipoTemporada random(List<EquipoTemporada> eq) {
@@ -103,21 +150,18 @@ public class PartidosController {
         return eq.get(num);
     }
 
-    private EquipoTemporada random(List<EquipoTemporada> des, Temporada te) {
-        List<EquipoTemporada> equiposr = eq.findAll().stream().filter(y -> y.getTemporada().getId().equals(te.getId())).collect(Collectors.toList());
-        des.forEach(x ->
-        {
-            equiposr.remove(x);
-        });
+    private Horario random1(List<Horario> h) {
         Random random = new Random();
-        int num = random.nextInt(equiposr.size());
-        return equiposr.get(num);
+        int num = random.nextInt(h.size());
+        return h.get(num);
     }
 
-    private EquipoTemporada random(List<EquipoTemporada> eqt, List<Partido> partidos, EquipoTemporada eq1) {
+    private EquipoTemporada random(List<EquipoTemporada> eqt, EquipoTemporada eq1) {
+        contador = 0;
         boolean aprobado = false;
         while (!aprobado)
         {
+            contador++;
             EquipoTemporada et = random(eqt);
             aprobado = partidos.isEmpty();
             for (Partido p : partidos)
@@ -125,10 +169,13 @@ public class PartidosController {
                 aprobado = evaluar(p, eq1, et);
                 if (!aprobado)
                 {
-                    if (eqt.size()<= 2)
+                    if (eqt.size() <= 2)
                     {
-                        aprobado=true;
-                        repetir=true;
+                        return null;
+                    }
+                    if (contador == eqt.size() - 1)
+                    {
+                        return null;
                     }
                     break;
                 }
@@ -154,9 +201,11 @@ public class PartidosController {
         return true;
     }
 
-    private Horario random1(List<Horario> h) {
-        Random random = new Random();
-        int num = random.nextInt(h.size());
-        return h.get(num);
+    private Boolean equipoDescanso(EquipoTemporada et) {
+        return descanso.stream().noneMatch(x -> x.getId().equals(et.getId()));
+    }
+
+    private List<EquipoTemporada> equipos(Jornada x) {
+        return eq.findAll().stream().filter(y -> y.getTemporada().getId().equals(x.getTemporada().getId())).collect(Collectors.toList());
     }
 }
