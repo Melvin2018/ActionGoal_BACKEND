@@ -36,7 +36,7 @@ public class Jornada implements Serializable {
     @Column(name = "numero")
     private Integer numero;
     @Column(name = "estado")
-    private Boolean estado;
+    private Integer estado;
     @JoinColumn(name = "temporada", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Temporada temporada;
@@ -69,11 +69,11 @@ public class Jornada implements Serializable {
         this.numero = numero;
     }
 
-    public Boolean getEstado() {
+    public Integer getEstado() {
         return estado;
     }
 
-    public void setEstado(Boolean estado) {
+    public void setEstado(Integer estado) {
         this.estado = estado;
     }
 

@@ -60,7 +60,7 @@ public class PartidosController {
         while (numero.incrementAndGet() != cant)
         {
             Jornada j = new Jornada();
-            j.setEstado(true);
+            j.setEstado(1);
             j.setNumero(numero.get());
             j.setTemporada(te);
             jornadasr.add(j);
@@ -88,7 +88,7 @@ public class PartidosController {
         {
             contador1++;
             parp = partidos(x, equipos(x));
-            if (contador1 == equipos(x).size())
+            if (contador1 == (3*equipos(x).size()/2))
             {
                 partidos.removeAll(partidos);
                 descanso.removeAll(descanso);

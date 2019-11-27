@@ -16,9 +16,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tabla")
 @JsonIgnoreProperties(
-{
-    "hibernateLazyInitializer", "handler"
-})
+        {
+            "hibernateLazyInitializer", "handler"
+        })
 public class Tabla implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -121,5 +121,13 @@ public class Tabla implements Serializable {
 
     public void setPuntos(Integer puntos) {
         this.puntos = puntos;
+    }
+
+    public Temporada getTemporada() {
+        return temporada;
+    }
+
+    public void setTemporada(Temporada temporada) {
+        this.temporada = temporada;
     }
 }

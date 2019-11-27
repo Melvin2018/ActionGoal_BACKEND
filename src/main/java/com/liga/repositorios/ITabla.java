@@ -5,5 +5,4 @@ import com.liga.entidades.Tabla;
 import org.springframework.stereotype.Repository;
 @Repository
 public interface ITabla extends JpaRepository<Tabla, Integer> {
-
 }

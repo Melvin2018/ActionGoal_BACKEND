@@ -1,5 +1,6 @@
 package com.liga.entidades;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
@@ -38,6 +39,7 @@ public class Horario implements Serializable {
     private Long id;
     @Basic(optional = false)
     @Column(name = "hora")
+    @JsonFormat(pattern="HH:mm")
     @Temporal(TemporalType.TIME)
     private Date hora;
     @Basic(optional = false)
@@ -103,31 +105,5 @@ public class Horario implements Serializable {
         this.partidoList = partidoList;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Horario))
-        {
-            return false;
-        }
-        Horario other = (Horario) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "votaciones.Horario[ id=" + id + " ]";
-    }
 
 }

@@ -1,5 +1,6 @@
 package com.liga.entidades;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "temporada")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties(
+    {
+       "hibernateLazyInitializer", "handler"
+    })
 public class Temporada implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -31,22 +35,25 @@ public class Temporada implements Serializable {
     @Basic(optional = false)
     @Column(name = "numero")
     private Integer numero;
-    @Column(name = "fecha_ini")
+    @Column(name = "fecha_ini") 
+    @JsonFormat(pattern="yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date fechaIni;
     @Column(name = "estado")
-    private String estado;
+    private Integer estado;
     @JsonIgnore
     @OneToMany(mappedBy = "temporada", fetch = FetchType.LAZY)
     private List<Jornada> jornadaList;
     @JsonIgnore
-    @OneToMany( mappedBy = "temporada", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "temporada", fetch = FetchType.LAZY)
     private List<EquipoTemporada> equipoTemporadaList;
     @JsonIgnore
-    @OneToMany( mappedBy = "temporada", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "temporada", fetch = FetchType.LAZY)
     private List<Tabla> tablaList;
+
     public Temporada() {
     }
+
     public Integer getId() {
         return id;
     }
@@ -71,13 +78,15 @@ public class Temporada implements Serializable {
         this.fechaIni = fechaIni;
     }
 
-    public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	@XmlTransient
+    public Integer getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer estado) {
+        this.estado = estado;
+    }
+
+    @XmlTransient
     public List<Jornada> getJornadaList() {
         return jornadaList;
     }
@@ -96,12 +105,14 @@ public class Temporada implements Serializable {
     }
 
     public List<Tabla> getTablaList() {
-		return tablaList;
-	}
-	public void setTablaList(List<Tabla> tablaList) {
-		this.tablaList = tablaList;
-	}
-	@Override
+        return tablaList;
+    }
+
+    public void setTablaList(List<Tabla> tablaList) {
+        this.tablaList = tablaList;
+    }
+
+    @Override
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
@@ -110,11 +121,13 @@ public class Temporada implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Temporada)) {
+        if (!(object instanceof Temporada))
+        {
             return false;
         }
         Temporada other = (Temporada) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)))
+        {
             return false;
         }
         return true;
@@ -123,5 +136,5 @@ public class Temporada implements Serializable {
     @Override
     public String toString() {
         return "votaciones.Temporada[ id=" + id + " ]";
-    }   
+    }
 }
