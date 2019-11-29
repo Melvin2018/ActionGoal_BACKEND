@@ -1,6 +1,7 @@
 package com.liga.controladores;
 
 import com.liga.entidades.Jornada;
+import com.liga.entidades.Partido;
 import com.liga.entidades.Tabla;
 import com.liga.entidades.Temporada;
 import com.liga.repositorios.ITabla;
@@ -47,11 +48,24 @@ public class JornadasController {
 
     @GetMapping(value = "/FindLast")
     public Jornada jornada() {
-         Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-        List<Jornada> jo= te.getJornadaList().stream().filter(x->x.getEstado()==1).collect(Collectors.toList());
-       if(!jo.isEmpty()){
-       return jo.stream().min((x,y)->x.getNumero().compareTo(y.getNumero())).get();
-       }
+        Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+        List<Jornada> jo = te.getJornadaList().stream().filter(x -> x.getEstado() == 1).collect(Collectors.toList());
+        if (!jo.isEmpty())
+        {
+            return jo.stream().min((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+        }
+        return null;
+    }
+
+    @GetMapping(value = "/Last")
+    public List<Partido> partidos() {
+        Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+        List<Jornada> jo = te.getJornadaList().stream().filter(x -> x.getEstado() == 1).collect(Collectors.toList());
+        if (!jo.isEmpty())
+        {
+            Jornada j = jo.stream().min((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+            return j.getPartidoList();
+        }
         return null;
     }
 }
