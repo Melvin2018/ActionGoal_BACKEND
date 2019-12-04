@@ -28,21 +28,19 @@ public class Partido implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Column(name = "estado")
     private Boolean estado;
     @JsonIgnore
     @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
     private List<Cambio> cambioList;
-    @JsonIgnore
     @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
     private List<Gol> golList;
     @JsonIgnore
     @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
-    private List<PartidoArbitro> partidoArbitroList;
-    @JsonIgnore
-    @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
     private List<Tarjeta> tarjetaList;
+    @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
+    private List<Formacion> formacionList;
     @JoinColumn(name = "equipo1", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private EquipoTemporada equipo1;
@@ -63,15 +61,11 @@ public class Partido implements Serializable {
     public Partido() {
     }
 
-    public Partido(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -108,17 +102,16 @@ public class Partido implements Serializable {
     }
 
     @XmlTransient
-    public List<PartidoArbitro> getPartidoArbitroList() {
-        return partidoArbitroList;
-    }
-
-    public void setPartidoArbitroList(List<PartidoArbitro> partidoArbitroList) {
-        this.partidoArbitroList = partidoArbitroList;
-    }
-
-    @XmlTransient
     public List<Tarjeta> getTarjetaList() {
         return tarjetaList;
+    }
+
+    public List<Formacion> getFormacionList() {
+        return formacionList;
+    }
+
+    public void setFormacionList(List<Formacion> formacionList) {
+        this.formacionList = formacionList;
     }
 
     public void setTarjetaList(List<Tarjeta> tarjetaList) {
@@ -163,23 +156,4 @@ public class Partido implements Serializable {
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Partido)) {
-            return false;
-        }
-        Partido other = (Partido) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "votaciones.Partido[ id=" + id + " ]";
-    }
-    
 }

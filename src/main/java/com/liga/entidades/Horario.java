@@ -12,13 +12,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,7 +33,7 @@ public class Horario implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Basic(optional = false)
     @Column(name = "hora")
     @JsonFormat(pattern="HH:mm")
@@ -54,21 +51,15 @@ public class Horario implements Serializable {
     public Horario() {
     }
 
-    public Horario(Long id) {
+    public Horario(Integer id) {
         this.id = id;
     }
 
-    public Horario(Long id, Date hora, String dia) {
-        this.id = id;
-        this.hora = hora;
-        this.dia = dia;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -104,6 +95,4 @@ public class Horario implements Serializable {
     public void setPartidoList(List<Partido> partidoList) {
         this.partidoList = partidoList;
     }
-
-
 }

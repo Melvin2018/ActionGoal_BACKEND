@@ -16,9 +16,11 @@ import com.liga.entidades.Temporada;
 import com.liga.repositorios.IEquipoTemporada;
 import com.liga.repositorios.IHorario;
 import com.liga.repositorios.IJornada;
+import com.liga.repositorios.IPartido;
 import com.liga.repositorios.ITemporada;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping(value = "/partido")
@@ -30,6 +32,8 @@ public class PartidosController {
     private ITemporada tempo;
     @Autowired
     private IJornada jor;
+    @Autowired
+    private IPartido par;
     @Autowired
     private IEquipoTemporada eq;
     private final List<EquipoTemporada> descanso = new ArrayList<>();
@@ -187,7 +191,6 @@ public class PartidosController {
         }
         return null;
     }
-
     private Boolean evaluar(Partido p, EquipoTemporada e1, EquipoTemporada e2) {
         if (Objects.equals(p.getEquipo1().getId(), e1.getId()) & Objects.equals(p.getEquipo2().getId(), e2.getId()))
         {
@@ -207,5 +210,9 @@ public class PartidosController {
 
     private List<EquipoTemporada> equipos(Jornada x) {
         return eq.findAll().stream().filter(y -> y.getTemporada().getId().equals(x.getTemporada().getId())).collect(Collectors.toList());
+    }
+    @GetMapping(value="/FindBy/{ID}")
+    public Partido buscar(@PathVariable("ID") Integer id){
+        return par.findById(id).get();
     }
 }

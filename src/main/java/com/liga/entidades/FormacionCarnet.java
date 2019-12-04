@@ -26,7 +26,7 @@ public class FormacionCarnet implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Column(name = "titular")
     private Boolean titular;
     @JoinColumn(name = "jugador", referencedColumnName = "id")
@@ -39,15 +39,12 @@ public class FormacionCarnet implements Serializable {
     public FormacionCarnet() {
     }
 
-    public FormacionCarnet(Long id) {
-        this.id = id;
-    }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -80,26 +77,6 @@ public class FormacionCarnet implements Serializable {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof FormacionCarnet))
-        {
-            return false;
-        }
-        FormacionCarnet other = (FormacionCarnet) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "votaciones.FormacionCarnet[ id=" + id + " ]";
     }
 
 }

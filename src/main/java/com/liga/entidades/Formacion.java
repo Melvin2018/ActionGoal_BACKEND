@@ -30,29 +30,25 @@ public class Formacion implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @JsonIgnore
     @OneToMany(mappedBy = "formacion", fetch = FetchType.LAZY)
     private List<FormacionCarnet> formacionCarnetList;
     @JoinColumn(name = "equipo", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private EquipoTemporada equipo;
-    @JoinColumn(name = "jornada", referencedColumnName = "id")
+    @JoinColumn(name = "partido", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Jornada jornada;
+    private Partido partido;
 
     public Formacion() {
     }
 
-    public Formacion(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -73,12 +69,12 @@ public class Formacion implements Serializable {
         this.equipo = equipo;
     }
 
-    public Jornada getJornada() {
-        return jornada;
+    public Partido getPartido() {
+        return partido;
     }
 
-    public void setJornada(Jornada jornada) {
-        this.jornada = jornada;
+    public void setPartido(Partido jornada) {
+        this.partido = jornada;
     }
 
     @Override
@@ -86,26 +82,6 @@ public class Formacion implements Serializable {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
         return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Formacion))
-        {
-            return false;
-        }
-        Formacion other = (Formacion) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "votaciones.Formacion[ id=" + id + " ]";
     }
 
 }

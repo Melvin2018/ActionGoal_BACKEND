@@ -2,7 +2,7 @@ package com.liga.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "tarjeta")
@@ -27,8 +25,7 @@ public class Tarjeta implements Serializable {
     @Column(name = "id")
     private Long id;
     @Column(name = "hora")
-    @Temporal(TemporalType.TIME)
-    private Date hora;
+    private Timestamp hora;
     @Column(name = "tipo")
     private Boolean tipo;
     @JoinColumn(name = "carnet", referencedColumnName = "id")
@@ -53,11 +50,11 @@ public class Tarjeta implements Serializable {
         this.id = id;
     }
 
-    public Date getHora() {
+    public Timestamp getHora() {
         return hora;
     }
 
-    public void setHora(Date hora) {
+    public void setHora(Timestamp hora) {
         this.hora = hora;
     }
 
@@ -91,23 +88,4 @@ public class Tarjeta implements Serializable {
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Tarjeta)) {
-            return false;
-        }
-        Tarjeta other = (Tarjeta) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "votaciones.Tarjeta[ id=" + id + " ]";
-    }
-    
 }

@@ -2,7 +2,7 @@ package com.liga.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
@@ -29,10 +27,9 @@ public class Gol implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Column(name = "hora")
-    @Temporal(TemporalType.TIME)
-    private Date hora;
+    private Timestamp hora;
     @Column(name = "forma")
     private String forma;
     @Column(name = "tipo")
@@ -47,23 +44,19 @@ public class Gol implements Serializable {
     public Gol() {
     }
 
-    public Gol(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Date getHora() {
+    public Timestamp getHora() {
         return hora;
     }
 
-    public void setHora(Date hora) {
+    public void setHora(Timestamp hora) {
         this.hora = hora;
     }
 
@@ -105,25 +98,4 @@ public class Gol implements Serializable {
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Gol))
-        {
-            return false;
-        }
-        Gol other = (Gol) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "votaciones.Gol[ id=" + id + " ]";
-    }
-
 }

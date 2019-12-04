@@ -32,7 +32,7 @@ public class Jornada implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Column(name = "numero")
     private Integer numero;
     @Column(name = "estado")
@@ -40,24 +40,17 @@ public class Jornada implements Serializable {
     @JoinColumn(name = "temporada", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Temporada temporada;
-    @JsonIgnore
-    @OneToMany(mappedBy = "jornada", fetch = FetchType.LAZY)
-    private List<Formacion> formacionList;
     @OneToMany(mappedBy = "jornada", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Partido> partidoList;
 
     public Jornada() {
     }
 
-    public Jornada(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -84,16 +77,6 @@ public class Jornada implements Serializable {
     public void setTemporada(Temporada temporada) {
         this.temporada = temporada;
     }
-
-    @XmlTransient
-    public List<Formacion> getFormacionList() {
-        return formacionList;
-    }
-
-    public void setFormacionList(List<Formacion> formacionList) {
-        this.formacionList = formacionList;
-    }
-
     @XmlTransient
     public List<Partido> getPartidoList() {
         return partidoList.stream().sorted((x, y) -> x.getHorario().getJerarquia().compareTo(y.getHorario().getJerarquia())).collect(Collectors.toList());

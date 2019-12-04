@@ -31,7 +31,7 @@ public class Carnet implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Column(name = "dorsal")
     private Integer dorsal;
      @JsonIgnore
@@ -59,15 +59,12 @@ public class Carnet implements Serializable {
     public Carnet() {
     }
 
-    public Carnet(Long id) {
-        this.id = id;
-    }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -146,25 +143,4 @@ public class Carnet implements Serializable {
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Carnet))
-        {
-            return false;
-        }
-        Carnet other = (Carnet) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "votaciones.Carnet[ id=" + id + " ]";
-    }
-
 }

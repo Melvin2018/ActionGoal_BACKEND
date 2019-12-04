@@ -2,7 +2,7 @@ package com.liga.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
@@ -29,10 +27,9 @@ public class Cambio implements Serializable {
     @Basic(optional = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @Column(name = "hora")
-    @Temporal(TemporalType.TIME)
-    private Date hora;
+    private Timestamp hora;
     @Column(name = "razon")
     private String razon;
     @JoinColumn(name = "saliente", referencedColumnName = "id")
@@ -47,24 +44,19 @@ public class Cambio implements Serializable {
 
     public Cambio() {
     }
-
-    public Cambio(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Date getHora() {
+    public Timestamp getHora() {
         return hora;
     }
 
-    public void setHora(Date hora) {
+    public void setHora(Timestamp hora) {
         this.hora = hora;
     }
 
@@ -99,32 +91,4 @@ public class Cambio implements Serializable {
     public void setPartido(Partido partido) {
         this.partido = partido;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Cambio))
-        {
-            return false;
-        }
-        Cambio other = (Cambio) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "votaciones.Cambio[ id=" + id + " ]";
-    }
-
 }
