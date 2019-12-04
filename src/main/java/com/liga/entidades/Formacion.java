@@ -31,7 +31,6 @@ public class Formacion implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @JsonIgnore
     @OneToMany(mappedBy = "formacion", fetch = FetchType.LAZY)
     private List<FormacionCarnet> formacionCarnetList;
     @JoinColumn(name = "equipo", referencedColumnName = "id")

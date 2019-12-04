@@ -94,13 +94,15 @@ public class CarnetController {
         });
         return posibles;
     }
-     @GetMapping(value = "/FindAll/formacion1/{ID}")
+
+    @GetMapping(value = "/FindAll/formacion1/{ID}")
     public List<Carnet> findForm1(@PathVariable("ID") Integer id) {
         Formacion et = formacion.getOne(id);
-          List<Carnet> dentro = new ArrayList<>();
-          et.getFormacionCarnetList().forEach(x->{
-          dentro.add(x.getJugador());
-          });
+        List<Carnet> dentro = new ArrayList<>();
+        et.getFormacionCarnetList().forEach(x ->
+        {
+            dentro.add(x.getJugador());
+        });
         return dentro;
     }
 }

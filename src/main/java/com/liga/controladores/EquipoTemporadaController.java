@@ -61,7 +61,8 @@ public class EquipoTemporadaController {
 
     @GetMapping(value = "/All")
     public List<EquipoTemporada> listado() {
-        return eq.findAll();
+        Temporada tem = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+        return tem.getEquipoTemporadaList();
     }
 
     @PostMapping(value = "/Add")
