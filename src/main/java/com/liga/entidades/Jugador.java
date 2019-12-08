@@ -17,10 +17,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "jugador")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties(
+{
+    "hibernateLazyInitializer", "handler"
+})
 public class Jugador implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +37,7 @@ public class Jugador implements Serializable {
     @Column(name = "posicion")
     private String posicion;
     @JoinColumn(name = "persona", referencedColumnName = "id")
-    @ManyToOne(optional = false,fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Persona persona;
     @JsonIgnore
     @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
@@ -62,9 +67,9 @@ public class Jugador implements Serializable {
     }
 
     public void setPosicion(String po) {
-        this.posicion= po;
+        this.posicion = po;
     }
-   
+
     public Persona getPersona() {
         return persona;
     }
@@ -73,18 +78,18 @@ public class Jugador implements Serializable {
         this.persona = persona;
     }
 
-	public List<Carnet> getCarnetList() {
-		return carnetList;
-	}
+    public List<Carnet> getCarnetList() {
+        return carnetList;
+    }
 
-	public void setCarnetList(List<Carnet> carnetList) {
-		this.carnetList = carnetList;
-	}
+    public void setCarnetList(List<Carnet> carnetList) {
+        this.carnetList = carnetList;
+    }
 
-	@Override
-	public String toString() {
-		return "Jugador [id=" + id + ", foto=" + foto + ", posicion=" + posicion + ", persona="
-				+ persona + "]";
-	}
-    
+    @Override
+    public String toString() {
+        return "Jugador [id=" + id + ", foto=" + foto + ", posicion=" + posicion + ", persona="
+                + persona + "]";
+    }
+
 }

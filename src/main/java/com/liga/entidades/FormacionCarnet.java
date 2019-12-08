@@ -1,5 +1,6 @@
 package com.liga.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -32,6 +33,7 @@ public class FormacionCarnet implements Serializable {
     @JoinColumn(name = "jugador", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Carnet jugador;
+    @JsonIgnore
     @JoinColumn(name = "formacion", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Formacion formacion;

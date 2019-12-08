@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,7 +32,8 @@ public class Formacion implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @OneToMany(mappedBy = "formacion", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(mappedBy = "formacion", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private List<FormacionCarnet> formacionCarnetList;
     @JoinColumn(name = "equipo", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)

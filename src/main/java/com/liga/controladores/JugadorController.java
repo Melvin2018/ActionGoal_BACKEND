@@ -111,11 +111,6 @@ public class JugadorController {
         return jug.getOne(id);
     }
 
-    @PutMapping(value = "/Update")
-    public Jugador editar(@RequestBody @Valid Jugador j) {
-        return jug.save(j);
-    }
-
     @DeleteMapping(value = "/Delete/{ID}")
     public Boolean eliminar(@PathVariable(name = "ID") int e) {
         Jugador j = jug.findById(e).get();

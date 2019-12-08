@@ -37,11 +37,6 @@ public class Persona implements Serializable {
     @Basic(optional = false)
     @Column(name = "dui")
     private String dui;
-    @Column(name = "nit")
-    private String nit;
-    @Basic(optional = false)
-    @Column(name = "altura")
-    private BigDecimal altura;
     @Basic(optional = false)
     @Column(name = "edad")
     private int edad = 0;
@@ -84,22 +79,6 @@ public class Persona implements Serializable {
         this.dui = dui;
     }
 
-    public String getNit() {
-        return nit;
-    }
-
-    public void setNit(String nit) {
-        this.nit = nit;
-    }
-
-    public BigDecimal getAltura() {
-        return altura;
-    }
-
-    public void setAltura(BigDecimal altura) {
-        this.altura = altura;
-    }
-
     public int getEdad() {
         return edad;
     }
@@ -115,11 +94,4 @@ public class Persona implements Serializable {
     public void setLugar(Lugar lugar) {
         this.lugar = lugar;
     }
-
-    @Override
-    public String toString() {
-        return "Persona [id=" + id + ", nombres=" + nombres + ", apellidos=" + apellidos + ", dui=" + dui + ", nit="
-                + nit + ", altura=" + altura + ", edad=" + edad + ", lugar=" + lugar + "]";
-    }
-
 }

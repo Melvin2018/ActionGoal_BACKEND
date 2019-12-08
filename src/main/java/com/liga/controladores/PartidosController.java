@@ -18,9 +18,15 @@ import com.liga.repositorios.IHorario;
 import com.liga.repositorios.IJornada;
 import com.liga.repositorios.IPartido;
 import com.liga.repositorios.ITemporada;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping(value = "/partido")
@@ -81,7 +87,7 @@ public class PartidosController {
                 }
             }
         } while (repetir);
-        jornadas.forEach(x->jor.save(x));
+        jornadas.forEach(x -> jor.save(x));
         return partidos;
     }
 
@@ -92,7 +98,7 @@ public class PartidosController {
         {
             contador1++;
             parp = partidos(x, equipos(x));
-            if (contador1 == (3*equipos(x).size()/2))
+            if (contador1 == (3 * equipos(x).size() / 2))
             {
                 partidos.removeAll(partidos);
                 descanso.removeAll(descanso);
@@ -191,6 +197,7 @@ public class PartidosController {
         }
         return null;
     }
+
     private Boolean evaluar(Partido p, EquipoTemporada e1, EquipoTemporada e2) {
         if (Objects.equals(p.getEquipo1().getId(), e1.getId()) & Objects.equals(p.getEquipo2().getId(), e2.getId()))
         {
@@ -211,8 +218,55 @@ public class PartidosController {
     private List<EquipoTemporada> equipos(Jornada x) {
         return eq.findAll().stream().filter(y -> y.getTemporada().getId().equals(x.getTemporada().getId())).collect(Collectors.toList());
     }
-    @GetMapping(value="/FindBy/{ID}")
-    public Partido buscar(@PathVariable("ID") Integer id){
-        return par.findById(id).get();
+
+    @GetMapping(value = "/FindBy/{ID}")
+    public Partido buscar(@PathVariable("ID") Integer id) {
+        Optional<Partido> p = par.findById(id);
+        if (p.isPresent())
+        {
+            return p.get();
+        }
+        return null;
+    }
+
+    @GetMapping(value = "/iniciar/{ID}")
+    public Partido iniciar(@PathVariable("ID") Integer id) {
+        Optional<Partido> p = par.findById(id);
+        if (p.isPresent())
+        {
+            p.get().setFecha(Timestamp.valueOf(LocalDateTime.now()));
+            return par.save(p.get());
+        }
+        return null;
+    }
+    @GetMapping(value = "/descanso/{ID}")
+    public Partido descanso(@PathVariable("ID") Integer id) {
+        Optional<Partido> p = par.findById(id);
+        if (p.isPresent())
+        {
+            p.get().setDescanso(true);
+            return par.save(p.get());
+        }
+        return null;
+    }
+     @GetMapping(value = "/reanudar/{ID}")
+    public Partido reanudar(@PathVariable("ID") Integer id) {
+        Optional<Partido> p = par.findById(id);
+        if (p.isPresent())
+        {
+            p.get().setDescanso(false);
+            return par.save(p.get());
+        }
+        return null;
+    }
+     @GetMapping(value = "/finalizar/{ID}")
+    public Partido finalizar(@PathVariable("ID") Integer id) {
+        Optional<Partido> p = par.findById(id);
+        if (p.isPresent())
+        {
+            p.get().setFinalizado(Timestamp.valueOf(LocalDateTime.now()));
+            return par.save(p.get());
+        }
+        return null;
     }
 }

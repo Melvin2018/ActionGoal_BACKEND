@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.liga.entidades.Carnet;
 import com.liga.entidades.EquipoTemporada;
-import com.liga.entidades.Formacion;
 import com.liga.entidades.extras.ID1;
 import com.liga.repositorios.ICarnet;
 import com.liga.repositorios.IEquipoTemporada;
-import com.liga.repositorios.IFormacion;
 import com.liga.repositorios.IJugador;
 import java.util.Objects;
 
@@ -30,8 +28,7 @@ public class CarnetController {
     private IEquipoTemporada eq;
     @Autowired
     private IJugador jugador;
-    @Autowired
-    private IFormacion formacion;
+
 
     @GetMapping(value = "/All")
     public List<EquipoTemporada> listado() {
@@ -82,27 +79,8 @@ public class CarnetController {
         }
         return jugadores;
     }
-
-    @GetMapping(value = "/FindAll/formacion/{ID}")
-    public List<Carnet> findForm(@PathVariable("ID") Integer id) {
-        Formacion et = formacion.getOne(id);
-        List<Carnet> jugadores = et.getEquipo().getCarnetList();
-        List<Carnet> posibles = new ArrayList<>();
-        et.getFormacionCarnetList().forEach(x ->
-        {
-            jugadores.removeIf(t -> Objects.equals(t.getId(), x.getJugador().getId()));
-        });
-        return posibles;
-    }
-
-    @GetMapping(value = "/FindAll/formacion1/{ID}")
-    public List<Carnet> findForm1(@PathVariable("ID") Integer id) {
-        Formacion et = formacion.getOne(id);
-        List<Carnet> dentro = new ArrayList<>();
-        et.getFormacionCarnetList().forEach(x ->
-        {
-            dentro.add(x.getJugador());
-        });
-        return dentro;
+     @GetMapping(value = "/FindBy/{ID}")
+    public Carnet findOne(@PathVariable("ID") Integer id) {
+        return car.getOne(id);
     }
 }

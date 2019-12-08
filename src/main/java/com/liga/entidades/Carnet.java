@@ -46,6 +46,7 @@ public class Carnet implements Serializable {
      @JsonIgnore
     @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<FormacionCarnet> formacionCarnetList;
+     @JsonIgnore
     @JoinColumn(name = "equipo", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private EquipoTemporada equipo;

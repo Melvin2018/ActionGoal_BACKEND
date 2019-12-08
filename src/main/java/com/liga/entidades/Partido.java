@@ -3,7 +3,7 @@ package com.liga.entidades;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -14,15 +14,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+
 @Entity
 @Table(name = "partido")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties(
+{
+    "hibernateLazyInitializer", "handler"
+})
 public class Partido implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -34,11 +37,13 @@ public class Partido implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
     private List<Cambio> cambioList;
+    @JsonIgnore
     @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
     private List<Gol> golList;
     @JsonIgnore
     @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
     private List<Tarjeta> tarjetaList;
+    @JsonIgnore
     @OneToMany(mappedBy = "partido", fetch = FetchType.LAZY)
     private List<Formacion> formacionList;
     @JoinColumn(name = "equipo1", referencedColumnName = "id")
@@ -51,8 +56,11 @@ public class Partido implements Serializable {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Horario horario;
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    private Timestamp fecha;
+    @Column(name = "finalizado")
+    private Timestamp finalizado; 
+     @Column(name = "descanso")
+    private Boolean descanso;
     @JsonIgnore
     @JoinColumn(name = "jornada", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -76,13 +84,32 @@ public class Partido implements Serializable {
     public void setEstado(Boolean estado) {
         this.estado = estado;
     }
-    public Date getFecha() {
+
+    public Timestamp getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(Timestamp fecha) {
         this.fecha = fecha;
     }
+
+    public Timestamp getFinalizado() {
+        return finalizado;
+    }
+
+    public void setFinalizado(Timestamp finalizado) {
+        this.finalizado = finalizado;
+    }
+
+    public Boolean getDescanso() {
+        return descanso;
+    }
+
+    public void setDescanso(Boolean descanso) {
+        this.descanso = descanso;
+    }
+
+
     @XmlTransient
     public List<Cambio> getCambioList() {
         return cambioList;
