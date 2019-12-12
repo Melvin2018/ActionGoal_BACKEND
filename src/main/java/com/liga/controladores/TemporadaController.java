@@ -16,6 +16,7 @@ import com.liga.entidades.EquipoTemporada;
 import com.liga.entidades.Tabla;
 import com.liga.entidades.Temporada;
 import com.liga.entidades.extras.TemporadaA;
+import com.liga.entidades.extras.TemporadaA;
 import com.liga.repositorios.ITemporada;
 
 @RestController
@@ -30,29 +31,24 @@ public class TemporadaController {
         return tempo.findAll();
     }
 
+    public Temporada ultima() {
+        return tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+    }
+
     @GetMapping(value = "/val")
     public Boolean validar() {
-        List<Temporada> temporadas = tempo.findAll();
-        if (!temporadas.isEmpty())
-        {
-            Temporada te = temporadas.stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-            return te.getEstado() == 3;
-        }
-        return true;
+            return  this.ultima().getEstado() == 3;
     }
 
     @GetMapping(value = "/showa")
     public Boolean showa() {
-        Temporada tem = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-        return tem.getEstado() == 1;
+        return this.ultima().getEstado() == 1;
     }
 
     @GetMapping(value = "/showg")
     public Boolean showg() {
-        Temporada tem = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-        return tem.getEstado() == 1
-                & tem.getEquipoTemporadaList().size() > 9
-                & tem.getJornadaList().isEmpty();
+        return this.ultima().getEquipoTemporadaList().size() > 9
+                & this.ultima().getJornadaList().isEmpty();
     }
 
     @GetMapping(value = "/antiguo")
@@ -63,7 +59,7 @@ public class TemporadaController {
         if (!temporadas.isEmpty())
         {
             Temporada te = temporadas.stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-            boolean b = te.getEstado()!=3;
+            boolean b = te.getEstado() != 3;
             if (b)
             {
                 temporadas.remove(te);
@@ -92,7 +88,7 @@ public class TemporadaController {
         if (!temporadas.isEmpty())
         {
             Temporada te = temporadas.stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-            b = te.getEstado()==3;
+            b = te.getEstado() == 3;
             tem.setNumero(te.getNumero() + 1);
         }
         if (b)
@@ -107,6 +103,7 @@ public class TemporadaController {
     public Temporada findBy(@PathVariable(value = "ID") int id) {
         return tempo.getOne(id);
     }
+
     @PutMapping(value = "/Update/{ID}")
     public Temporada editar(@RequestBody @Valid Temporada t, @PathVariable(value = "ID") int id) {
         t.setId(id);

@@ -1,5 +1,6 @@
 package com.liga.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -44,6 +45,7 @@ public class Tabla implements Serializable {
     @JoinColumn(name = "equipo", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private EquipoTemporada equipo;
+    @JsonIgnore
     @JoinColumn(name = "temporada", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Temporada temporada;

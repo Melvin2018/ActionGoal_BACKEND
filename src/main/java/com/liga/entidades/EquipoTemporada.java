@@ -38,6 +38,7 @@ public class EquipoTemporada implements Serializable {
     @JoinColumn(name = "representante", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Jugador representante;
+    @JsonIgnore
     @JoinColumn(name = "temporada", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Temporada temporada;

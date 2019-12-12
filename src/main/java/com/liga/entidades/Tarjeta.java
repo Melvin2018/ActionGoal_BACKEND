@@ -26,6 +26,8 @@ public class Tarjeta implements Serializable {
     private Long id;
     @Column(name = "hora")
     private Timestamp hora;
+    @Column(name = "minuto")
+    private Integer minuto;
     @Column(name = "tipo")
     private Boolean tipo;
     @JoinColumn(name = "carnet", referencedColumnName = "id")
@@ -52,6 +54,14 @@ public class Tarjeta implements Serializable {
 
     public Timestamp getHora() {
         return hora;
+    }
+
+    public Integer getMinuto() {
+        return minuto;
+    }
+
+    public void setMinuto(Integer minuto) {
+        this.minuto = minuto;
     }
 
     public void setHora(Timestamp hora) {

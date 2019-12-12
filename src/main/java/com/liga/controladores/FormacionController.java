@@ -10,7 +10,6 @@ import com.liga.entidades.FormacionCarnet;
 import com.liga.entidades.Partido;
 import com.liga.repositorios.IFormacion;
 import com.liga.repositorios.IPartido;
-import com.liga.repositorios.IformacionCarnet;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,27 +24,29 @@ public class FormacionController {
     @Autowired
     private IPartido par;
 
+    @GetMapping(value = "/All")
+    public List<Formacion> lista(){
+        return formacion.findAll();
+    }
     @PostMapping(value = "/Add")
     public Formacion registrar(@RequestBody Formacion form) {
-        form.getFormacionCarnetList().forEach(x ->
-        {
+        form.getFormacionCarnetList().forEach(x -> {
             x.setFormacion(form);
         });
         return formacion.save(form);
     }
-
     @GetMapping(value = "/FindAll/{ID}")
     public List<Formacion> buscar(@PathVariable("ID") Integer id) {
-        Optional<Partido> p = par.findById(id);
-        if (p.isPresent())
-        {
+        final Optional<Partido> p = par.findById(id);
+        if (p.isPresent()) {
             return p.get().getFormacionList();
         }
         return null;
     }
-     @GetMapping(value = "/FindByID/{ID}")
+
+    @GetMapping(value = "/FindByID/{ID}")
     public List<FormacionCarnet> buscarID(@PathVariable("ID") Integer id) {
-        Optional<Formacion> p = formacion.findById(id);
+        final Optional<Formacion> p = formacion.findById(id);
         if (p.isPresent())
         {
             return p.get().getFormacionCarnetList();

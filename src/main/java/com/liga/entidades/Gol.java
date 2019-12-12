@@ -30,6 +30,8 @@ public class Gol implements Serializable {
     private Integer id;
     @Column(name = "hora")
     private Timestamp hora;
+    @Column(name = "minuto")
+    private Integer minuto;
     @Column(name = "forma")
     private String forma;
     @Column(name = "tipo")
@@ -58,6 +60,14 @@ public class Gol implements Serializable {
 
     public void setHora(Timestamp hora) {
         this.hora = hora;
+    }
+
+    public Integer getMinuto() {
+        return minuto;
+    }
+
+    public void setMinuto(Integer minuto) {
+        this.minuto = minuto;
     }
 
     public String getForma() {

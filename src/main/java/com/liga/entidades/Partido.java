@@ -1,5 +1,6 @@
 package com.liga.entidades;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
@@ -21,9 +22,9 @@ import javax.persistence.GenerationType;
 @Entity
 @Table(name = "partido")
 @JsonIgnoreProperties(
-{
-    "hibernateLazyInitializer", "handler"
-})
+        {
+            "hibernateLazyInitializer", "handler"
+        })
 public class Partido implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,12 +56,17 @@ public class Partido implements Serializable {
     @JoinColumn(name = "horario", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Horario horario;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-6")
     @Column(name = "fecha")
     private Timestamp fecha;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-6")
+    @Column(name = "segundot")
+    private Timestamp segundot;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-6")
     @Column(name = "finalizado")
-    private Timestamp finalizado; 
-     @Column(name = "descanso")
-    private Boolean descanso;
+    private Timestamp finalizado;
+    @Column(name = "descanso")
+    private Integer descanso;
     @JsonIgnore
     @JoinColumn(name = "jornada", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -101,14 +107,21 @@ public class Partido implements Serializable {
         this.finalizado = finalizado;
     }
 
-    public Boolean getDescanso() {
+    public Timestamp getSegundot() {
+        return segundot;
+    }
+
+    public void setSegundot(Timestamp segundot) {
+        this.segundot = segundot;
+    }
+
+    public Integer getDescanso() {
         return descanso;
     }
 
-    public void setDescanso(Boolean descanso) {
+    public void setDescanso(Integer descanso) {
         this.descanso = descanso;
     }
-
 
     @XmlTransient
     public List<Cambio> getCambioList() {

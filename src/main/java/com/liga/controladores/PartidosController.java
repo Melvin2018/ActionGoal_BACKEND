@@ -12,21 +12,20 @@ import com.liga.entidades.EquipoTemporada;
 import com.liga.entidades.Horario;
 import com.liga.entidades.Jornada;
 import com.liga.entidades.Partido;
+import com.liga.entidades.Tarjeta;
 import com.liga.entidades.Temporada;
+import com.liga.entidades.extras.Cronologia;
 import com.liga.repositorios.IEquipoTemporada;
 import com.liga.repositorios.IHorario;
 import com.liga.repositorios.IJornada;
 import com.liga.repositorios.IPartido;
 import com.liga.repositorios.ITemporada;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping(value = "/partido")
@@ -35,13 +34,17 @@ public class PartidosController {
     @Autowired
     private IHorario hora;
     @Autowired
-    private ITemporada tempo;
-    @Autowired
     private IJornada jor;
     @Autowired
     private IPartido par;
     @Autowired
     private IEquipoTemporada eq;
+    @Autowired
+    private ITemporada tempo;
+
+    public Temporada ultima() {
+        return tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+    }
     private final List<EquipoTemporada> descanso = new ArrayList<>();
     private final List<Partido> partidos = new ArrayList<>();
     private final List<Jornada> jornadas = new ArrayList<>();
@@ -50,7 +53,7 @@ public class PartidosController {
 
     @GetMapping(value = "/Generar")
     public List<Partido> generar() {
-        Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+        Temporada te = this.ultima();
         if (!te.getJornadaList().isEmpty())
         {
             return null;
@@ -234,39 +237,104 @@ public class PartidosController {
         Optional<Partido> p = par.findById(id);
         if (p.isPresent())
         {
+            p.get().setDescanso(0);
             p.get().setFecha(Timestamp.valueOf(LocalDateTime.now()));
             return par.save(p.get());
         }
         return null;
     }
+
     @GetMapping(value = "/descanso/{ID}")
     public Partido descanso(@PathVariable("ID") Integer id) {
         Optional<Partido> p = par.findById(id);
         if (p.isPresent())
         {
-            p.get().setDescanso(true);
+            p.get().setDescanso(1);
             return par.save(p.get());
         }
         return null;
     }
-     @GetMapping(value = "/reanudar/{ID}")
+
+    @GetMapping(value = "/reanudar/{ID}")
     public Partido reanudar(@PathVariable("ID") Integer id) {
         Optional<Partido> p = par.findById(id);
         if (p.isPresent())
         {
-            p.get().setDescanso(false);
+            p.get().setDescanso(2);
+            p.get().setSegundot(Timestamp.valueOf(LocalDateTime.now()));
             return par.save(p.get());
         }
         return null;
     }
-     @GetMapping(value = "/finalizar/{ID}")
+
+    @GetMapping(value = "/finalizar/{ID}")
     public Partido finalizar(@PathVariable("ID") Integer id) {
         Optional<Partido> p = par.findById(id);
         if (p.isPresent())
         {
+            p.get().setDescanso(3);
             p.get().setFinalizado(Timestamp.valueOf(LocalDateTime.now()));
             return par.save(p.get());
         }
         return null;
+    }
+
+    @GetMapping(value = "/mensaje/{ID}")
+    public List<Cronologia> mensaje(@PathVariable("ID") Integer id) {
+        Partido p = par.getOne(id);
+        List<Cronologia> lista = new ArrayList<>();
+        p.getCambioList().forEach(x ->
+        {
+            Cronologia c = new Cronologia();
+            boolean equipo = Objects.equals(x.getEntrante().getEquipo().getId(), p.getEquipo1().getId());
+            c.setEquipo(equipo);
+            c.setMinuto(x.getMinuto());
+            c.setDato(x.getRazon());
+            c.setJugador1(x.getEntrante().getJugador());
+            c.setJugador2(x.getSaliente().getJugador());
+            c.setTipo("cambio");
+            lista.add(c);
+        });
+        List<Tarjeta> tar=new ArrayList<>();
+        p.getTarjetaList().stream().sorted((x, y) -> x.getMinuto().compareTo(y.getMinuto())).forEach(x ->
+        {
+            tar.add(x);
+            Cronologia c = new Cronologia();
+            boolean equipo = Objects.equals(x.getCarnet().getEquipo().getId(), p.getEquipo1().getId());
+            c.setEquipo(equipo);
+            c.setMinuto(x.getMinuto());
+            if (x.getTipo())
+            {
+                if (tar.stream().filter(a->a.getCarnet().getId()==x.getCarnet().getId()).count() > 1)
+                {
+                 c.setTipo("roja y amarilla");
+                }else{
+                c.setTipo("tarjeta roja");
+                  }
+            } else
+            {
+                 if (tar.stream().filter(a->a.getCarnet().getId()==x.getCarnet().getId()).count() > 1)
+                {
+                    c.setTipo("doble amarilla");
+                } else
+                {
+                    c.setTipo("tarjeta amarilla");
+                }
+            }
+            c.setJugador1(x.getCarnet().getJugador());
+            lista.add(c);
+        });
+        p.getGolList().forEach(x ->
+        {
+            Cronologia c = new Cronologia();
+            boolean equipo = Objects.equals(x.getCarnet().getEquipo().getId(), p.getEquipo1().getId());
+            c.setEquipo(equipo);
+            c.setMinuto(x.getMinuto());
+            c.setTipo("gol");
+            c.setDato(x.getForma());
+            c.setJugador1(x.getCarnet().getJugador());
+            lista.add(c);
+        });
+        return lista.stream().sorted((x, y) -> y.getMinuto().compareTo(x.getMinuto())).collect(Collectors.toList());
     }
 }

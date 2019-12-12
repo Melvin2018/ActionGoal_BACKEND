@@ -5,9 +5,9 @@ import com.liga.entidades.Partido;
 import com.liga.entidades.Tabla;
 import com.liga.entidades.Temporada;
 import com.liga.repositorios.ITabla;
+import com.liga.repositorios.ITemporada;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.liga.repositorios.ITemporada;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,14 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class JornadasController {
 
     @Autowired
+    private ITabla tab;
+@Autowired
     private ITemporada tempo;
 
-    @Autowired
-    private ITabla tab;
-
+    public Temporada ultima() {
+        return tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+    }
     @GetMapping(value = "/All")
     public List<Jornada> jornadas() {
-        Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+        Temporada te = this.ultima();
         if (te.getTablaList().isEmpty())
         {
             te.getEquipoTemporadaList().forEach(x ->
@@ -48,7 +50,7 @@ public class JornadasController {
 
     @GetMapping(value = "/FindLast")
     public Jornada jornada() {
-        Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+        Temporada te = this.ultima();
         List<Jornada> jo = te.getJornadaList().stream().filter(x -> x.getEstado() == 1).collect(Collectors.toList());
         if (!jo.isEmpty())
         {
@@ -59,7 +61,7 @@ public class JornadasController {
 
     @GetMapping(value = "/Last")
     public List<Partido> partidos() {
-        Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
+        Temporada te = this.ultima();
         List<Jornada> jo = te.getJornadaList().stream().filter(x -> x.getEstado() == 1).collect(Collectors.toList());
         if (!jo.isEmpty())
         {

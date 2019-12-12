@@ -1,6 +1,5 @@
 package com.liga.entidades;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.List;
@@ -32,7 +31,6 @@ public class Formacion implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @JsonIgnore
     @OneToMany(mappedBy = "formacion", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     private List<FormacionCarnet> formacionCarnetList;
     @JoinColumn(name = "equipo", referencedColumnName = "id")

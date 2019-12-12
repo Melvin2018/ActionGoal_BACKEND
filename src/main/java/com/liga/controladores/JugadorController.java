@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,63 +34,27 @@ public class JugadorController {
     private IEquipoTemporada eq;
     @Autowired
     private IEquipo equipo;
-    @Autowired
-    private ITemporada tempo;
 
-    @GetMapping(value = "/restantes/{ID}")
-    public List<Jugador> restante(@PathVariable("ID") Integer id) {
-        Optional<Equipo> et = equipo.findById(id);
-        Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-        List<Jugador> personas = new ArrayList<>();
-        if (et.isPresent())
-        {
-            Lugar lu = et.get().getLugar();
-            Predicate<EquipoTemporada> pre = x -> Objects.equals(x.getEquipo().getLugar().getId(), lu.getId());
-            personas = jug.findAll().stream().filter(x -> Objects.equals(x.getPersona().getLugar().getId(), lu.getId())).collect(Collectors.toList());
-            if (te.getEquipoTemporadaList().stream().filter(pre).count() >= 1)
-            {
-                for (EquipoTemporada eqt : te.getEquipoTemporadaList().stream().filter(pre).collect(Collectors.toList()))
-                {
-                    personas.removeIf(s -> Objects.equals(s.getId(), eqt.getRepresentante().getId()));
-                    for (Carnet c : eqt.getCarnetList())
-                    {
-                        personas.removeIf(s -> Objects.equals(s.getId(), c.getJugador().getId()));
-                    }
-                }
-            }
-        }
-        return personas;
+    @GetMapping(value = "/posibles/{ID}")
+    public List<Jugador> representantes(@PathVariable("ID") Integer id) {
+        Equipo et = equipo.getOne(id);
+        return jug.findAll().stream().filter(x -> Objects.equals(x.getPersona().getLugar().getId(), et.getLugar().getId())).collect(Collectors.toList());
     }
 
-    @GetMapping(value = "/jugadores/{ID}")
-    public List<Jugador> dentro(@PathVariable("ID") Integer id) {
-        Optional<EquipoTemporada> et = eq.findById(id);
-        List<Jugador> jugadores = new ArrayList<>();
-        Temporada te = tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();
-        if (et.isPresent())
+    @GetMapping(value = "/posiblesc/{ID}")
+    public List<Jugador> carnets(@PathVariable("ID") Integer id) {
+        EquipoTemporada et = eq.getOne(id);
+        Predicate<Jugador> pre = x -> Objects.equals(et.getEquipo().getLugar().getId(), x.getPersona().getLugar().getId());
+        Predicate<EquipoTemporada> pre1 = x -> Objects.equals(et.getEquipo().getLugar().getId(), x.getEquipo().getLugar().getId());
+        List<Jugador> personas = jug.findAll().stream().filter(pre).collect(Collectors.toList());
+        et.getTemporada().getEquipoTemporadaList().stream().filter(pre1).forEach(x ->
         {
-            EquipoTemporada equipotempo = et.get();
-            Lugar lu = equipotempo.getEquipo().getLugar();
-            Predicate<EquipoTemporada> pre = x -> Objects.equals(x.getEquipo().getLugar().getId(), lu.getId());
-            Predicate<Jugador> preJug = x -> Objects.equals(x.getPersona().getLugar().getId(), lu.getId());
-            jugadores = jug.findAll().stream().filter(preJug).collect(Collectors.toList());
-            if (te.getEquipoTemporadaList().stream().filter(pre).count() >= 1)
+            x.getCarnetList().forEach(y ->
             {
-                for (EquipoTemporada eqt : te.getEquipoTemporadaList().stream().filter(pre).collect(Collectors.toList()))
-                {
-                    jugadores.removeIf(s -> Objects.equals(s.getId(), eqt.getRepresentante().getId()));
-                    for (Carnet c : eqt.getCarnetList())
-                    {
-                        jugadores.removeIf(s -> Objects.equals(s.getId(), c.getJugador().getId()));
-                    }
-                }
-            }
-            if (equipotempo.getCarnetList().stream().filter(x -> Objects.equals(x.getJugador().getId(), equipotempo.getRepresentante().getId())).count() == 0)
-            {
-                jugadores.add(equipotempo.getRepresentante());
-            }
-        }
-        return jugadores;
+                personas.removeIf(z -> Objects.equals(z.getId(), y.getJugador().getId()));
+            });
+        });
+        return personas;
     }
 
     @GetMapping(value = "/All")
@@ -111,8 +72,8 @@ public class JugadorController {
         return jug.getOne(id);
     }
 
-    @DeleteMapping(value = "/Delete/{ID}")
-    public Boolean eliminar(@PathVariable(name = "ID") int e) {
+    @GetMapping(value = "/Delete/{ID}")
+    public Boolean eliminar(@PathVariable(value = "ID") int e) {
         Jugador j = jug.findById(e).get();
         if (j.getCarnetList().isEmpty())
         {

@@ -18,34 +18,40 @@ import com.liga.entidades.Equipo;
 import com.liga.repositorios.IEquipo;
 
 @RestController
-@RequestMapping(value="/equipo")
+@RequestMapping(value = "/equipo")
 public class EquipoController {
-	@Autowired
-	private IEquipo eq;
-	
-	@GetMapping(value="/All")
-	public List<Equipo> listado() {
-		return eq.findAll();
-	}
-	@PostMapping(value = "/Add")
-	public Equipo registrar(@RequestBody @Valid Equipo j) {
-           return eq.save(j);
-	}
-	@GetMapping(value = "/FindBy/{ID}")
-	public Equipo findBy(@PathVariable(value="ID") int id) {
-            return eq.getOne(id);
-	}
-        @PutMapping(value = "/Update")
-	public Equipo editar(@RequestBody @Valid Equipo j) {
-            return eq.save(j);
-	}
-	@DeleteMapping(value = "/Delete/{ID}")
-	public boolean eliminar(@PathVariable(name="ID") int e) { 
-		Equipo equipo=eq.getOne(e);
-		if(equipo.getEquipoTList().isEmpty()) {
-			eq.deleteById(e);
-			return true;
-		}
-		return false;
-	}
+
+    @Autowired
+    private IEquipo eq;
+
+    @GetMapping(value = "/All")
+    public List<Equipo> listado() {
+        return eq.findAll();
+    }
+
+    @PostMapping(value = "/Add")
+    public Equipo registrar(@RequestBody @Valid Equipo j) {
+        return eq.save(j);
+    }
+
+    @GetMapping(value = "/FindBy/{ID}")
+    public Equipo findBy(@PathVariable(value = "ID") int id) {
+        return eq.getOne(id);
+    }
+
+    @PutMapping(value = "/Update")
+    public Equipo editar(@RequestBody @Valid Equipo j) {
+        return eq.save(j);
+    }
+
+    @DeleteMapping(value = "/Delete/{ID}")
+    public boolean eliminar(@PathVariable(name = "ID") int e) {
+        Equipo equipo = eq.getOne(e);
+        if (equipo.getEquipoTList().isEmpty())
+        {
+            eq.deleteById(e);
+            return true;
+        }
+        return false;
+    }
 }
