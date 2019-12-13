@@ -1,5 +1,6 @@
 package com.liga.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.List;
@@ -39,6 +40,7 @@ public class Jornada implements Serializable {
     @JoinColumn(name = "temporada", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Temporada temporada;
+    @JsonIgnore
     @OneToMany(mappedBy = "jornada", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Partido> partidoList;
 

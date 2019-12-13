@@ -274,11 +274,16 @@ public class PartidosController {
         {
             p.get().setDescanso(3);
             p.get().setFinalizado(Timestamp.valueOf(LocalDateTime.now()));
+            Jornada j = p.get().getJornada();
+            if (j.getPartidoList().get(j.getPartidoList().size() - 1).getId() == p.get().getId())
+            {
+                j.setEstado(2);
+            }
             return par.save(p.get());
         }
         return null;
     }
-
+ 
     @GetMapping(value = "/mensaje/{ID}")
     public List<Cronologia> mensaje(@PathVariable("ID") Integer id) {
         Partido p = par.getOne(id);
@@ -295,7 +300,7 @@ public class PartidosController {
             c.setTipo("cambio");
             lista.add(c);
         });
-        List<Tarjeta> tar=new ArrayList<>();
+        List<Tarjeta> tar = new ArrayList<>();
         p.getTarjetaList().stream().sorted((x, y) -> x.getMinuto().compareTo(y.getMinuto())).forEach(x ->
         {
             tar.add(x);
@@ -305,15 +310,16 @@ public class PartidosController {
             c.setMinuto(x.getMinuto());
             if (x.getTipo())
             {
-                if (tar.stream().filter(a->a.getCarnet().getId()==x.getCarnet().getId()).count() > 1)
+                if (tar.stream().filter(a -> a.getCarnet().getId() == x.getCarnet().getId()).count() > 1)
                 {
-                 c.setTipo("roja y amarilla");
-                }else{
-                c.setTipo("tarjeta roja");
-                  }
+                    c.setTipo("roja y amarilla");
+                } else
+                {
+                    c.setTipo("tarjeta roja");
+                }
             } else
             {
-                 if (tar.stream().filter(a->a.getCarnet().getId()==x.getCarnet().getId()).count() > 1)
+                if (tar.stream().filter(a -> Objects.equals(a.getCarnet().getId(), x.getCarnet().getId())).count() > 1)
                 {
                     c.setTipo("doble amarilla");
                 } else
@@ -327,7 +333,16 @@ public class PartidosController {
         p.getGolList().forEach(x ->
         {
             Cronologia c = new Cronologia();
-            boolean equipo = Objects.equals(x.getCarnet().getEquipo().getId(), p.getEquipo1().getId());
+            boolean equipo = false;
+            if(Objects.equals(x.getCarnet().getEquipo().getId(), p.getEquipo1().getId())){
+                if(x.getTipo()){
+                equipo=true;
+                }
+            }else{
+               if(!x.getTipo()){
+                equipo=true;
+                }
+            }
             c.setEquipo(equipo);
             c.setMinuto(x.getMinuto());
             c.setTipo("gol");

@@ -198,9 +198,8 @@ public class CarnetController {
     public int tarjetas(Carnet c, boolean b) {
         return (int) c.getTarjetaList().stream().filter(x -> x.getTipo() == b).count();
     }
-
     public int goles(Carnet c) {
-        return c.getGolList().size();
+        return (int) c.getGolList().stream().filter(x->x.getTipo()).count();
     }
     @GetMapping(value = "/conteo")
     public List<Conteo> conteo(){
@@ -220,10 +219,9 @@ public class CarnetController {
             c.setAmarillas(this.tarjetas(x, false));
             c.setRojas(this.tarjetas(x, true));
             c.setGoles(this.goles(x));
+            c.setEquipo(x.getEquipo().getEquipo());
             conteo.add(c);
         });
         return conteo;
     }
-    
-    
 }

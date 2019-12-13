@@ -1,6 +1,5 @@
 package com.liga.controladores;
 
-import com.liga.entidades.Carnet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +26,6 @@ public class GolController {
     private IGol gol;
     @Autowired
     private IPartido par;
-    @Autowired
-    private ICarnet car;
 
     @PostMapping(value = "/Add")
     public Gol registrar(@RequestBody Gol g) {

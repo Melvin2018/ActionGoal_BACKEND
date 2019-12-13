@@ -43,7 +43,7 @@ public class Carnet implements Serializable {
      @JsonIgnore
     @OneToMany(mappedBy = "carnet", fetch = FetchType.LAZY)
     private List<Gol> golList;
-     @JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<FormacionCarnet> formacionCarnetList;
     @JsonIgnore

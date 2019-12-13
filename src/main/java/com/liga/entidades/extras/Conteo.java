@@ -1,14 +1,24 @@
 package com.liga.entidades.extras;
 
 import com.liga.entidades.Carnet;
+import com.liga.entidades.Equipo;
 
 public class Conteo {
    private Carnet jugador;
    private Integer goles;
    private Integer amarillas;
    private Integer rojas;
-
+   private Equipo equipo;
+   
     public Conteo() {
+    }
+
+    public Equipo getEquipo() {
+        return equipo;
+    }
+
+    public void setEquipo(Equipo equipo) {
+        this.equipo = equipo;
     }
 
     public Carnet getJugador() {

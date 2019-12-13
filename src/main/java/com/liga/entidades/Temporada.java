@@ -18,14 +18,17 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "temporada")
 @JsonIgnoreProperties(
-    {
-       "hibernateLazyInitializer", "handler"
-    })
+        {
+            "hibernateLazyInitializer", "handler"
+        })
 public class Temporada implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +38,8 @@ public class Temporada implements Serializable {
     @Basic(optional = false)
     @Column(name = "numero")
     private Integer numero;
-    @Column(name = "fecha_ini") 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @Column(name = "fecha_ini")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date fechaIni;
     @Column(name = "estado")

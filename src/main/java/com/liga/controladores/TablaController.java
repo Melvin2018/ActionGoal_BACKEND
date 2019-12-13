@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.liga.entidades.Tabla;
 import com.liga.entidades.Temporada;
+import com.liga.entidades.extras.Resultado;
 import com.liga.repositorios.IPartido;
 import com.liga.repositorios.ITabla;
 import com.liga.repositorios.ITemporada;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -34,7 +36,32 @@ public class TablaController {
     @GetMapping(value = "/All")
     public List<Tabla> listado() {
         Temporada te = this.ultima();
-        return te.getTablaList().stream().sorted((x, y) -> y.getPuntos().compareTo(x.getPuntos())).collect(Collectors.toList());
+        if (te.getTablaList().isEmpty())
+        {
+            te.getEquipoTemporadaList().forEach(x ->
+            {
+                Tabla t = new Tabla();
+                t.setEquipo(x);
+                t.setGf(0);
+                t.setPg(0);
+                t.setPp(0);
+                t.setPe(0);
+                t.setGc(0);
+                t.setPj(0);
+                t.setPuntos(0);
+                t.setTemporada(te);
+                tabla.save(t);
+            });
+        }
+        return te.getTablaList()
+                .stream()
+                .sorted(Comparator.comparingInt(Tabla::getPuntos)
+                        .thenComparing((x, y) -> dg(x).compareTo(dg(y))).reversed())
+                .collect(Collectors.toList());
+    }
+
+    Integer dg(Tabla t) {
+        return t.getGf() - t.getGc();
     }
 
     @GetMapping(value = "/ingreso/{ID}")
@@ -53,14 +80,34 @@ public class TablaController {
                 tempo.save(te);
             }
         }
+        List<Resultado> re = new MethodsTable().tabla(p);
         Tabla t = te.getTablaList().stream()
                 .filter(x -> Objects.equals(x.getEquipo().getId(), p.getEquipo1().getId()))
                 .collect(Collectors.toList()).get(0);
-        tabla.save(new MethodsTable().tabla(t, p.getGolList()));
         Tabla t1 = te.getTablaList().stream()
                 .filter(x -> Objects.equals(x.getEquipo().getId(), p.getEquipo2().getId()))
                 .collect(Collectors.toList()).get(0);
-        tabla.save(new MethodsTable().tabla(t1, p.getGolList()));
+        tabla.save(resultado(t, re.get(0)));
+        tabla.save(resultado(t1, re.get(1)));
         return true;
+    }
+
+    private Tabla resultado(Tabla t, Resultado r) {
+        t.setGc(t.getGc() + r.getContra());
+        t.setGf(t.getGf() + r.getFavor());
+        t.setPuntos(t.getPuntos() + r.getPuntos());
+        t.setPj(t.getPj() + 1);
+        if (r.getPuntos() == 3)
+        {
+            t.setPg(t.getPg() + 1);
+        } else if (r.getPuntos() == 1)
+        {
+            t.setPe(t.getPe() + 1);
+        } else
+        {
+            t.setPp(t.getPp() + 1);
+        }
+
+        return t;
     }
 }
