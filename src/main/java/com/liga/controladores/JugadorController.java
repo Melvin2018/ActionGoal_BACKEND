@@ -20,6 +20,7 @@ import com.liga.entidades.Temporada;
 import com.liga.repositorios.IEquipo;
 import com.liga.repositorios.IEquipoTemporada;
 import com.liga.repositorios.IJugador;
+import com.liga.repositorios.IPosicion;
 import com.liga.repositorios.ITemporada;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -34,6 +35,8 @@ public class JugadorController {
     private IEquipoTemporada eq;
     @Autowired
     private IEquipo equipo;
+    @Autowired
+    private IPosicion posi;
 
     @GetMapping(value = "/posibles/{ID}")
     public List<Jugador> representantes(@PathVariable("ID") Integer id) {

@@ -77,7 +77,7 @@ public class CarnetController {
     @GetMapping(value = "/Delete/{ID}")
     public boolean eliminar(@PathVariable("ID") int e) {
         Carnet ca = car.getOne(e);
-        if (ca.getFormacionCarnetList().isEmpty() | ca.getCambioList1().isEmpty())
+        if (ca.getFormacionCarnetList().isEmpty() & ca.getCambioList1().isEmpty() & ca.getGolList().isEmpty())
         {
             car.deleteById(e);
             return true;

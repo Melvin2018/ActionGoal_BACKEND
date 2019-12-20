@@ -13,6 +13,7 @@ import com.liga.entidades.Equipo;
 import com.liga.entidades.EquipoTemporada;
 import com.liga.entidades.Temporada;
 import com.liga.entidades.extras.ET;
+import com.liga.repositorios.ICarnet;
 import com.liga.repositorios.IEquipo;
 import com.liga.repositorios.IEquipoTemporada;
 import com.liga.repositorios.ITemporada;
@@ -27,6 +28,8 @@ public class EquipoTemporadaController {
     private IEquipo equipo;
     @Autowired
     private ITemporada tempo;
+     @Autowired
+    private ICarnet car;
 
     public Temporada ultima() {
         return tempo.findAll().stream().max((x, y) -> x.getNumero().compareTo(y.getNumero())).get();

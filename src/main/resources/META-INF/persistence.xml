@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="com.liga_ActionGoal_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.liga.entidades.Arbitro</class>
+    <class>com.liga.entidades.Atributo</class>
+    <class>com.liga.entidades.Cambio</class>
+    <class>com.liga.entidades.Carnet</class>
+    <class>com.liga.entidades.Equipo</class>
+    <class>com.liga.entidades.EquipoTemporada</class>
+    <class>com.liga.entidades.Formacion</class>
+    <class>com.liga.entidades.FormacionCarnet</class>
+    <class>com.liga.entidades.Gol</class>
+    <class>com.liga.entidades.Horario</class>
+    <class>com.liga.entidades.Jornada</class>
+    <class>com.liga.entidades.Jugador</class>
+    <class>com.liga.entidades.JugadorAtributo</class>
+    <class>com.liga.entidades.Lugar</class>
+    <class>com.liga.entidades.Partido</class>
+    <class>com.liga.entidades.PartidoArbitro</class>
+    <class>com.liga.entidades.Persona</class>
+    <class>com.liga.entidades.Posicion</class>
+    <class>com.liga.entidades.Tabla</class>
+    <class>com.liga.entidades.Tarjeta</class>
+    <class>com.liga.entidades.Temporada</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/liga?serverTimezone=GMT-6"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="root"/>
+    </properties>
+  </persistence-unit>
+</persistence>

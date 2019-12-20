@@ -39,12 +39,7 @@ public class EquipoController {
         return eq.getOne(id);
     }
 
-    @PutMapping(value = "/Update")
-    public Equipo editar(@RequestBody @Valid Equipo j) {
-        return eq.save(j);
-    }
-
-    @DeleteMapping(value = "/Delete/{ID}")
+    @GetMapping(value = "/Delete/{ID}")
     public boolean eliminar(@PathVariable(name = "ID") int e) {
         Equipo equipo = eq.getOne(e);
         if (equipo.getEquipoTList().isEmpty())

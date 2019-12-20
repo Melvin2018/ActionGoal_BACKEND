@@ -21,9 +21,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "jugador")
 @JsonIgnoreProperties(
-{
-    "hibernateLazyInitializer", "handler"
-})
+        {
+            "hibernateLazyInitializer", "handler"
+        })
 public class Jugador implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,11 +34,13 @@ public class Jugador implements Serializable {
     private Integer id;
     @Column(name = "foto")
     private String foto;
-    @Column(name = "posicion")
-    private String posicion;
+
     @JoinColumn(name = "persona", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Persona persona;
+    @JoinColumn(name = "posi", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Posicion posicion;
     @JsonIgnore
     @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<Carnet> carnetList;
@@ -62,14 +64,6 @@ public class Jugador implements Serializable {
         this.foto = foto;
     }
 
-    public String getPosicion() {
-        return posicion;
-    }
-
-    public void setPosicion(String po) {
-        this.posicion = po;
-    }
-
     public Persona getPersona() {
         return persona;
     }
@@ -86,10 +80,12 @@ public class Jugador implements Serializable {
         this.carnetList = carnetList;
     }
 
-    @Override
-    public String toString() {
-        return "Jugador [id=" + id + ", foto=" + foto + ", posicion=" + posicion + ", persona="
-                + persona + "]";
+    public Posicion getPosicion() {
+        return posicion;
+    }
+
+    public void setPosicion(Posicion posicion) {
+        this.posicion = posicion;
     }
 
 }
